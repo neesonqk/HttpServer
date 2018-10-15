@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class SingleThreadHttpHttpServer implements HttpServer {
+public class SingleThreadHttpServer implements HttpServer {
 
     public void run(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
