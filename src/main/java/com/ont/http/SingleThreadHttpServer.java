@@ -16,7 +16,7 @@ public class SingleThreadHttpServer implements HttpServer {
                 StringBuilder stringBuffer = new StringBuilder();
 
                 String inputLine;
-                while (!(inputLine = inBufferReader.readLine()).equals("")) {
+                while ((inputLine = inBufferReader.readLine()) != null && !inputLine.equals("")) {
                     stringBuffer.append(inputLine);
                     stringBuffer.append("\r\n");
                 }
@@ -24,26 +24,26 @@ public class SingleThreadHttpServer implements HttpServer {
                 System.out.println(stringBuffer.toString());
 
                 OutputStream outStream = socket.getOutputStream();
-                BufferedReader bufferedReader = new BufferedReader(new StringReader("A Message from server."));
-
-                // Header should be ended with '\r\n' at each line.
-                outStream.write("HTTP/1.0 200 OK\r\n".getBytes());
-                outStream.write("Main: OneServer 0.1\r\n".getBytes());
-                outStream.write("Content-length: 22\r\n".getBytes()); // if text/plain the length is required
+                // Header should be ended with '\r\n' at each line
+                outStream.write("HTTP/1.1 200 OK\r\n".getBytes());
+                //outStream.write("Main: OneServer 0.1\r\n".getBytes());
+                outStream.write("Content-Length: 22\r\n".getBytes()); // if text/plain the length is required
                 outStream.write("Content-Type: text/plain\r\n".getBytes());
+                //outStream.write("Connection: close\r\n".getBytes());
 
                 // An empty line is required after the header
                 outStream.write("\r\n".getBytes());
 
                 String line;
+                BufferedReader bufferedReader = new BufferedReader(new StringReader("A Message from server."));
                 while ((line = bufferedReader.readLine()) != null) {
                     outStream.write(line.getBytes());
                 }
 
-                inBufferReader.close();
-                bufferedReader.close();
                 outStream.flush();
                 outStream.close(); // Socket will close automatically once output stream is closed.
+                bufferedReader.close();
+                inBufferReader.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
